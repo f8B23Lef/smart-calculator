@@ -1,5 +1,6 @@
 class SmartCalculator {
   constructor(initialValue) {
+
     this.priority = {
       '+': 1,
       '-': 1,
@@ -12,90 +13,68 @@ class SmartCalculator {
     this.operand = [];
     
     this.operand.push(initialValue);
-
-    this.result = -1;
   }
 
   add(number) {
-    var plus = '+';
-    if(!this.operator.length) {
-      this.operator.push(plus);	
-    } else {
-      this.checkPriority(plus);
-    }
-    this.operand.push(number);
+    this.updateReversePolishExpression('+', number);
     return this;
   }
   
   subtract(number) {
-    var minus = '-';
-    if(!this.operator.length) {
-      this.operator.push(minus);	
-    } else {
-      this.checkPriority(minus);
-    }
-    this.operand.push(number);
+    this.updateReversePolishExpression('-', number);
     return this;
   }
 
   multiply(number) {
-    var mult = '*';
-    if(!this.operator.length) {
-      this.operator.push(mult);	
-    } else {
-      this.checkPriority(mult);
-    }
-    this.operand.push(number);
+    this.updateReversePolishExpression('*', number);
     return this;
   }
 
   devide(number) {
-    var div = '/';
-    if(!this.operator.length) {
-      this.operator.push(div);	
-    } else {
-      this.checkPriority(div);
-    }
-    this.operand.push(number);
+    this.updateReversePolishExpression('/', number);
     return this;
   }
 
   pow(number) {
-    var pow = '**';
-    if(!this.operator.length) {
-      this.operator.push(pow);	
-    } else {
-      this.checkPriority(pow);
-    }
-    this.operand.push(number);
+    this.updateReversePolishExpression('**', number);
     return this;
   }
 
-  checkPriority(curOperator) {
+  updateReversePolishExpression(curOperator, number) {
+    
     var lastOperator = this.operator[this.operator.length - 1];
     var lastOperatorPriority = this.priority[lastOperator];
+    var curOperatorPriority = this.priority[curOperator];
 
-    var curOperatorPriority = this.getPriority(curOperator);
+    var flag = true;
 
-    while(this.operator.length && lastOperatorPriority >= curOperatorPriority) {  
-      this.operand.push(this.operator.pop());
+    while(this.operator.length && lastOperatorPriority >= curOperatorPriority) { 
+      if(curOperator === '**' && lastOperator === '**') {
+        this.operand.push(number);
+        this.operand.push(this.operator.pop());
+        flag = false;
+      } else {
+        this.operand.push(this.operator.pop());
+        flag = true;
+      }
       lastOperator = this.operator[this.operator.length - 1];
-      lastOperatorPriority = this.getPriority(lastOperator);  
+      lastOperatorPriority = this.priority[lastOperator]; 
     }
-    this.operator.push(curOperator);
+
+    if(flag) {
+      this.operator.push(curOperator);
+      this.operand.push(number);
+    } else {
+      this.operator.push(curOperator);
+    }
   }
 
-  getPriority(operator) {
-    return this.priority[operator];
-  }
-
-  toString() {//toString()
+  toString() {
     while(this.operator.length) {
       this.operand.push(this.operator.pop());
     }
-    this.result = calculate(this.operand);
 
-    return this.result;
+    return calculate(this.operand);
   }
 }
 
