@@ -1,4 +1,5 @@
 class SmartCalculator {
+  
   constructor(initialValue) {
 
     this.priority = {
@@ -41,12 +42,12 @@ class SmartCalculator {
   }
 
   updateReversePolishExpression(curOperator, number) {
-    
-    var lastOperator = this.operator[this.operator.length - 1];
-    var lastOperatorPriority = this.priority[lastOperator];
-    var curOperatorPriority = this.priority[curOperator];
 
-    var flag = true;
+    let lastOperator = this.operator[this.operator.length - 1];
+    let lastOperatorPriority = this.priority[lastOperator];
+    const curOperatorPriority = this.priority[curOperator];
+
+    let flag = true;
 
     while(this.operator.length && lastOperatorPriority >= curOperatorPriority) { 
       if(curOperator === '**' && lastOperator === '**') {
@@ -88,11 +89,11 @@ function calculate(rpn) {
     '**': (x, y) => x ** y
   };
 
-  var stack = [];
+  const stack = [];
   
-  for(var i = 0; i < rpn.length; i++) {
+  for(let i = 0; i < rpn.length; i++) {
     if(rpn[i] in operators) {
-      var [y, x] = [stack.pop(), stack.pop()];
+      const [y, x] = [stack.pop(), stack.pop()];
       stack.push(operators[rpn[i]](x, y));
     } else {
       stack.push(rpn[i]);
